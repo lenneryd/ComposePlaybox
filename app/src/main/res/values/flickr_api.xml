@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="flickr_api_key">b108ec5aea815cb4886e8a591807d9dd</string>
+    <string name="flickr_base_url">https://api.flickr.com/</string>
+</resources>
