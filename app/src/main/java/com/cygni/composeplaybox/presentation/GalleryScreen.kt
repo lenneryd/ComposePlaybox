@@ -3,8 +3,8 @@ package com.cygni.composeplaybox.presentation
 import android.content.Intent
 import android.net.Uri
 import android.util.Log
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.expandIn
+import androidx.compose.animation.*
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -106,13 +106,11 @@ fun GalleryScreenComposable(uiState: GalleryScreenState) {
                     )
 
                     if (isShowingInfo) {
-                        Box(
+                        AnimatedVisibility(visible = isShowingInfo,
+                            enter = EnterTransition.None,
+                            exit = ExitTransition.None,
                             modifier = Modifier
-                                .background(
-                                    MaterialTheme.colors.background.copy(alpha = 0.5f)
-                                )
                                 .fillMaxSize()
-                                .padding(24.dp)
                                 .constrainAs(infobox) {
                                     height = Dimension.fillToConstraints
                                     width = Dimension.fillToConstraints
@@ -121,48 +119,62 @@ fun GalleryScreenComposable(uiState: GalleryScreenState) {
                                     top.linkTo(image.top)
                                     bottom.linkTo(image.bottom)
                                 }
-                                .clickable { isShowingInfo = isShowingInfo.not() }
                         ) {
-                            Column(modifier = Modifier
-                                .fillMaxWidth()
-                                .wrapContentHeight()) {
-                                Column {
-                                    Text(
-                                        text = photo.title,
-                                        color = MaterialTheme.colors.primary,
-                                        fontSize = 20.sp,
-                                        fontWeight = FontWeight.Bold
+                            Box(
+                                modifier = Modifier
+                                    .background(
+                                        MaterialTheme.colors.background.copy(alpha = 0.5f)
                                     )
-                                }
+                                    .padding(24.dp)
+                                    .animateEnterExit(
+                                        enter = slideInHorizontally(),
+                                        exit = slideOutHorizontally()
+                                    )
+                                    .clickable { isShowingInfo = isShowingInfo.not() }
+                            ) {
                                 Column(
-                                    verticalArrangement = Arrangement.Bottom,
                                     modifier = Modifier
-                                        .fillMaxSize()
-
+                                        .fillMaxWidth()
+                                        .wrapContentHeight()
                                 ) {
+                                    Column {
+                                        Text(
+                                            text = photo.title,
+                                            color = MaterialTheme.colors.primary,
+                                            fontSize = 20.sp,
+                                            fontWeight = FontWeight.Bold
+                                        )
+                                    }
+                                    Column(
+                                        verticalArrangement = Arrangement.Bottom,
+                                        modifier = Modifier
+                                            .fillMaxSize()
 
-                                    Text(
-                                        text = "Flicker ID: ${photo.id}",
-                                        color = MaterialTheme.colors.primary,
-                                        fontSize = 14.sp
-                                    )
+                                    ) {
 
-                                    val context = LocalContext.current
-                                    Text(
-                                        text = photo.url,
-                                        color = MaterialTheme.colors.primaryVariant,
-                                        fontSize = 14.sp,
-                                        modifier = Modifier.clickable {
-                                            context.apply {
-                                                startActivity(
-                                                    Intent(
-                                                        Intent.ACTION_VIEW,
-                                                        Uri.parse(photo.url)
+                                        Text(
+                                            text = "Flicker ID: ${photo.id}",
+                                            color = MaterialTheme.colors.primary,
+                                            fontSize = 14.sp
+                                        )
+
+                                        val context = LocalContext.current
+                                        Text(
+                                            text = photo.url,
+                                            color = MaterialTheme.colors.primaryVariant,
+                                            fontSize = 14.sp,
+                                            modifier = Modifier.clickable {
+                                                context.apply {
+                                                    startActivity(
+                                                        Intent(
+                                                            Intent.ACTION_VIEW,
+                                                            Uri.parse(photo.url)
+                                                        )
                                                     )
-                                                )
+                                                }
                                             }
-                                        }
-                                    )
+                                        )
+                                    }
                                 }
                             }
                         }
