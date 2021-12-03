@@ -105,94 +105,82 @@ fun GalleryScreenComposable(uiState: GalleryScreenState) {
                         }
                     )
 
-                    if (isShowingInfo) {
-                        AnimatedVisibility(visible = isShowingInfo,
-                            enter = EnterTransition.None,
-                            exit = ExitTransition.None,
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .constrainAs(infobox) {
-                                    height = Dimension.fillToConstraints
-                                    width = Dimension.fillToConstraints
-                                    start.linkTo(image.start)
-                                    end.linkTo(image.end)
-                                    top.linkTo(image.top)
-                                    bottom.linkTo(image.bottom)
-                                }
-                        ) {
-                            Box(
+                    Crossfade(
+                        targetState = isShowingInfo,
+                        modifier = Modifier
+                            .constrainAs(infobox) {
+                                width = Dimension.fillToConstraints
+                                height = Dimension.fillToConstraints
+                                start.linkTo(image.start)
+                                end.linkTo(image.end)
+                                top.linkTo(image.top)
+                                bottom.linkTo(image.bottom)
+                            }
+                    ) { isShowing ->
+                        if (isShowing) {
+                            Column(
+                                verticalArrangement = Arrangement.SpaceBetween,
                                 modifier = Modifier
+                                    .fillMaxSize()
                                     .background(
                                         MaterialTheme.colors.background.copy(alpha = 0.5f)
                                     )
-                                    .padding(24.dp)
-                                    .animateEnterExit(
-                                        enter = slideInHorizontally(),
-                                        exit = slideOutHorizontally()
-                                    )
                                     .clickable { isShowingInfo = isShowingInfo.not() }
                             ) {
-                                Column(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .wrapContentHeight()
-                                ) {
-                                    Column {
-                                        Text(
-                                            text = photo.title,
-                                            color = MaterialTheme.colors.primary,
-                                            fontSize = 20.sp,
-                                            fontWeight = FontWeight.Bold
-                                        )
-                                    }
-                                    Column(
-                                        verticalArrangement = Arrangement.Bottom,
-                                        modifier = Modifier
-                                            .fillMaxSize()
+                                Text(
+                                    text = photo.title,
+                                    color = MaterialTheme.colors.primary,
+                                    fontSize = 20.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    modifier = Modifier.padding(16.dp)
+                                )
 
-                                    ) {
+                                Column(modifier = Modifier.padding(16.dp)) {
+                                    Text(
+                                        text = "Flicker ID: ${photo.id}",
+                                        color = MaterialTheme.colors.primary,
+                                        fontSize = 14.sp
+                                    )
 
-                                        Text(
-                                            text = "Flicker ID: ${photo.id}",
-                                            color = MaterialTheme.colors.primary,
-                                            fontSize = 14.sp
-                                        )
-
-                                        val context = LocalContext.current
-                                        Text(
-                                            text = photo.url,
-                                            color = MaterialTheme.colors.primaryVariant,
-                                            fontSize = 14.sp,
-                                            modifier = Modifier.clickable {
-                                                context.apply {
-                                                    startActivity(
-                                                        Intent(
-                                                            Intent.ACTION_VIEW,
-                                                            Uri.parse(photo.url)
-                                                        )
+                                    val context = LocalContext.current
+                                    Text(
+                                        text = photo.url,
+                                        color = MaterialTheme.colors.primaryVariant,
+                                        fontSize = 14.sp,
+                                        modifier = Modifier.clickable {
+                                            context.apply {
+                                                startActivity(
+                                                    Intent(
+                                                        Intent.ACTION_VIEW,
+                                                        Uri.parse(photo.url)
                                                     )
-                                                }
+                                                )
                                             }
-                                        )
-                                    }
+                                        }
+                                    )
                                 }
                             }
                         }
                     }
 
-                    Icon(
-                        if (isShowingInfo) Icons.Filled.Info else Icons.Outlined.Info,
-                        contentDescription = "Info Icon",
-                        tint = MaterialTheme.colors.primaryVariant,
+                    Crossfade(
+                        targetState = isShowingInfo,
                         modifier = Modifier
-                            .size(48.dp)
-                            .padding(bottom = 8.dp, end = 8.dp)
-                            .clickable { isShowingInfo = isShowingInfo.not() }
                             .constrainAs(icon) {
                                 end.linkTo(image.end)
                                 bottom.linkTo(image.bottom)
-                            }
-                    )
+                            })
+                    { isShowing ->
+                        Icon(
+                            if (isShowing) Icons.Filled.Info else Icons.Outlined.Info,
+                            contentDescription = "Info Icon",
+                            tint = MaterialTheme.colors.primaryVariant,
+                            modifier = Modifier
+                                .size(48.dp)
+                                .padding(bottom = 8.dp, end = 8.dp)
+                                .clickable { isShowingInfo = isShowingInfo.not() }
+                        )
+                    }
                 }
             }
         }
