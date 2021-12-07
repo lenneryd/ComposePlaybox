@@ -83,7 +83,7 @@ fun ClockScreenComposable(
                 val sweep = sweepAngle(second = uiState.numbers.second).value * 360f
                 val sweepAngle = if (isFillingCircle) sweep else 360f - sweep
                 val startAngle = if (isFillingCircle) -90f else -90f + sweep
-                val drawStyle = if (!isUsingStroke) Fill else Stroke(24.0f)
+                val drawStyle = if (!isUsingStroke) Fill else Stroke(36.0f)
 
                 Canvas(
                     modifier = Modifier

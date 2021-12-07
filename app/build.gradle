@@ -34,7 +34,8 @@ android {
         freeCompilerArgs += ["-Xuse-experimental=kotlin.RequiresOptIn",
                              "-Xuse-experimental=kotlinx.coroutines.FlowPreview",
                              "-Xuse-experimental=kotlinx.serialization.ExperimentalSerializationApi",
-                             "-Xuse-experimental=androidx.compose.animation.ExperimentalAnimationApi"
+                             "-Xuse-experimental=androidx.compose.animation.ExperimentalAnimationApi",
+                             "-Xuse-experimental=coil.transition.ExperimentalCoilApi"
         ]
     }
 
