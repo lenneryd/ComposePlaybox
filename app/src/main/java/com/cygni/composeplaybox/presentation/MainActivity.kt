@@ -162,7 +162,7 @@ fun DrawerItem(iconResource: Int, title: String, onClick: () -> Unit) {
 @Composable
 fun MainScreenPreview() {
     MainScreenComposable(
-        clockContent = { ClockScreenComposable(uiState = clockPreviewState()) },
+        clockContent = { ClockScreenComposable(state = clockPreviewState()) },
         galleryContent = { GalleryScreenComposable(uiState = galleryPreviewState()) }
     )
 }
