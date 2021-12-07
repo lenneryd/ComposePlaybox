@@ -3,27 +3,33 @@ package com.cygni.composeplaybox.presentation
 import android.content.Intent
 import android.net.Uri
 import android.util.Log
-import androidx.compose.animation.*
-import androidx.compose.animation.core.tween
+import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.outlined.Info
-import androidx.compose.material.icons.sharp.Info
-import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
@@ -36,32 +42,10 @@ import coil.compose.rememberImagePainter
 import coil.size.OriginalSize
 import com.cygni.composeplaybox.R
 import com.cygni.composeplaybox.data.models.PhotoModel
+import com.cygni.composeplaybox.presentation.colors.DarkColors
+import com.cygni.composeplaybox.presentation.colors.LightColors
 import com.cygni.composeplaybox.presentation.viewmodel.GalleryScreenState
 import com.cygni.composeplaybox.presentation.viewmodel.GalleryViewModel
-
-private val White1000 = Color(0xFFFFFFFF)
-private val Yellow200 = Color(0xffffeb46)
-private val Yellow500 = Color(0xFFD37510)
-private val Blue200 = Color(0xff91a4fc)
-private val Blue500 = Color(0xFF0D258B)
-private val Blue700 = Color(0xFF06103C)
-
-private val DarkColors = darkColors(
-    primary = Yellow200,
-    primaryVariant = Yellow200,
-    secondary = Yellow500,
-    surface = Blue500,
-    background = Blue700
-    // ...
-)
-private val LightColors = lightColors(
-    primary = Blue200,
-    primaryVariant = Blue200,
-    surface = Blue700,
-    secondary = Blue700,
-    background = Blue700
-    // ...
-)
 
 @Composable
 fun GalleryScreen(viewModel: GalleryViewModel) {
@@ -191,22 +175,24 @@ fun GalleryScreenComposable(uiState: GalleryScreenState) {
 @Composable
 fun GalleryPreview() {
     GalleryScreenComposable(
-        uiState = GalleryScreenState(
-            listOf(
-                PhotoModel(
-                    id = "1",
-                    title = "Moon",
-                    url = "https://live.staticflickr.com/65535/51709199634_124a8612b0_z.jpg",
-                    placeholderRes = R.drawable.moon_placeholder
-                ),
-                PhotoModel(
-                    id = "2",
-                    title = "Saturnus",
-                    url = "https://live.staticflickr.com/65535/51699978771_da7d40866f_z.jpg",
-                    placeholderRes = R.drawable.saturnus_placeholder
-                )
-            )
-        )
+        uiState = galleryPreviewState()
     )
 }
+
+fun galleryPreviewState(): GalleryScreenState = GalleryScreenState(
+    listOf(
+        PhotoModel(
+            id = "1",
+            title = "Moon",
+            url = "https://live.staticflickr.com/65535/51709199634_124a8612b0_z.jpg",
+            placeholderRes = R.drawable.moon_placeholder
+        ),
+        PhotoModel(
+            id = "2",
+            title = "Saturnus",
+            url = "https://live.staticflickr.com/65535/51699978771_da7d40866f_z.jpg",
+            placeholderRes = R.drawable.saturnus_placeholder
+        )
+    )
+)
 

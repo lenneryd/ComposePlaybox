@@ -6,10 +6,22 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.*
-import androidx.compose.runtime.*
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -22,29 +34,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import com.cygni.composeplaybox.presentation.colors.DarkColors
+import com.cygni.composeplaybox.presentation.colors.LightColors
 import com.cygni.composeplaybox.presentation.viewmodel.ClockScreenState
 import com.cygni.composeplaybox.presentation.viewmodel.ClockTime
 import com.cygni.composeplaybox.presentation.viewmodel.ClockViewModel
-
-private val Yellow200 = Color(0xffffeb46)
-private val Yellow500 = Color(0xFFD37510)
-private val Blue200 = Color(0xff91a4fc)
-private val Blue500 = Color(0xFF0D258B)
-private val Blue700 = Color(0xFF06103C)
-
-private val DarkColors = darkColors(
-    primary = Yellow200,
-    secondary = Yellow500,
-    surface = Blue500
-    // ...
-)
-private val LightColors = lightColors(
-    primary = Blue200,
-    primaryVariant = Blue200,
-    surface = Blue700,
-    secondary = Blue700,
-    // ...
-)
 
 @Composable
 fun ClockScreen(
@@ -83,7 +77,8 @@ fun ClockScreenComposable(
             ) {
                 val color: Color = MaterialTheme.colors.surface
                 val isFillingCircle = uiState.numbers.minute % 2 == 0
-                val isUsingStroke = clicks % 2 == 1
+                val isUsingStroke =
+                    if (MaterialTheme.colors.isLight) clicks % 2 == 0 else clicks % 2 == 1
 
                 val sweep = sweepAngle(second = uiState.numbers.second).value * 360f
                 val sweepAngle = if (isFillingCircle) sweep else 360f - sweep
@@ -176,13 +171,15 @@ fun sweepAngle(second: Int): State<Float> {
 @Composable
 fun ClockScreenPreview() {
     ClockScreenComposable(
-        uiState = ClockScreenState(
-            weekday = "Monday",
-            dayMonth = "25 NOV",
-            hour = "16",
-            minute = "15",
-            second = "15",
-            numbers = ClockTime(minute = 1, second = 15)
-        )
+        uiState = clockPreviewState()
     )
 }
+
+fun clockPreviewState(): ClockScreenState = ClockScreenState(
+    weekday = "Monday",
+    dayMonth = "25 NOV",
+    hour = "16",
+    minute = "15",
+    second = "15",
+    numbers = ClockTime(minute = 1, second = 15)
+)

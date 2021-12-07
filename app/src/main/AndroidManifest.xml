@@ -10,11 +10,12 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.ComposePlaybox"
+        android:theme="@style/Theme.ComposePlaybox.NoActionBar"
         android:name=".presentation.ComposePlayboxApplication">
         <activity
             android:name=".presentation.MainActivity"
             android:label="@string/app_name"
+            android:theme="@style/Theme.ComposePlaybox.NoActionBar"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
