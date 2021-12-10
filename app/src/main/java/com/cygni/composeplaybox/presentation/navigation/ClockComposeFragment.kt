@@ -1,16 +1,15 @@
 package com.cygni.composeplaybox.presentation.navigation
 
-import android.graphics.drawable.TransitionDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.fragment.findNavController
 import androidx.transition.TransitionInflater
-import com.cygni.composeplaybox.R
 import com.cygni.composeplaybox.databinding.ClockFragmentBinding
+import com.cygni.composeplaybox.presentation.ClockScreen
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -41,6 +40,10 @@ class ClockComposeFragment : Fragment() {
 
         binding.navigateToStart.setOnClickListener {
             findNavController().popBackStack()
+        }
+
+        binding.clockCompose.setContent {
+            ClockScreen(viewModel = viewModel())
         }
         return binding.root
     }
