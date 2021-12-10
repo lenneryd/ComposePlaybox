@@ -2,6 +2,8 @@ package com.cygni.composeplaybox.presentation.colors
 
 import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
+import androidx.compose.material3.darkColorScheme
+import androidx.compose.material3.lightColorScheme
 import androidx.compose.ui.graphics.Color
 
 private val Purple700 = Color(0xFF3700B3)
@@ -53,3 +55,6 @@ val LightColors = lightColors(
     onSurface = Black1000,
     onError = White1000
 )
+
+val DarkYuColors = darkColorScheme()
+val LightYuColors = lightColorScheme()

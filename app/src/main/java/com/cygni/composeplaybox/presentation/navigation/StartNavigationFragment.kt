@@ -1,5 +1,6 @@
 package com.cygni.composeplaybox.presentation.navigation
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -9,6 +10,8 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import com.cygni.composeplaybox.databinding.StartNavigationFragmentBinding
+import com.cygni.composeplaybox.presentation.compose.ComposeActivity
+import com.cygni.composeplaybox.presentation.compose.ComposeYuActivity
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -34,6 +37,14 @@ class StartNavigationFragment : Fragment() {
                 directions = StartNavigationFragmentDirections.actionStartNavigationFragmentToClockComposeFragment(),
                 navigatorExtras = extras
             )
+        }
+
+        binding.navigateToCompose.setOnClickListener {
+            startActivity(Intent(requireContext(), ComposeActivity::class.java))
+        }
+
+        binding.navigateToComposeYu.setOnClickListener {
+            startActivity(Intent(requireContext(), ComposeYuActivity::class.java))
         }
         return binding.root
     }

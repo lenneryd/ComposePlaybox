@@ -9,7 +9,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.fragment.findNavController
 import androidx.transition.TransitionInflater
 import com.cygni.composeplaybox.databinding.ClockFragmentBinding
-import com.cygni.composeplaybox.presentation.ClockScreen
+import com.cygni.composeplaybox.presentation.compose.ClockScreen
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
