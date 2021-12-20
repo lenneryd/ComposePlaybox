@@ -33,13 +33,14 @@ import com.cygni.composeplaybox.presentation.colors.AppYuTheme
 import kotlinx.coroutines.launch
 
 enum class Views {
-    Clock, Gallery, None
+    Clock, Gallery, Colors, None
 }
 
 @Composable
 fun MainScreenComposable(
     clockContent: @Composable () -> Unit,
-    galleryContent: @Composable () -> Unit
+    galleryContent: @Composable () -> Unit,
+    colorsContent: @Composable () -> Unit
 ) {
 
     val scaffoldState = rememberScaffoldState()
@@ -91,12 +92,23 @@ fun MainScreenComposable(
                 scope.launch { scaffoldState.drawerState.apply { close() } }
             }
             Divider(startIndent = 16.dp, modifier = Modifier.padding(end = 16.dp))
+            DrawerItem(
+                iconResource = R.drawable.information_outline,
+                title = "Material You Colors"
+            ) {
+                if (showView != Views.Colors) {
+                    showView = Views.Colors
+                }
+                scope.launch { scaffoldState.drawerState.apply { close() } }
+            }
+            Divider(startIndent = 16.dp, modifier = Modifier.padding(end = 16.dp))
         }
     ) {
         Crossfade(targetState = showView) { showView ->
             when (showView) {
                 Views.Gallery -> galleryContent()
                 Views.Clock -> clockContent()
+                Views.Colors -> colorsContent()
                 Views.None -> {}
             }
         }
@@ -135,7 +147,8 @@ fun MainScreenPreview() {
     AppYuTheme {
         MainScreenComposable(
             clockContent = { ClockScreenComposable(state = clockPreviewState()) },
-            galleryContent = { GalleryScreenComposable(uiState = galleryPreviewState()) }
+            galleryContent = { GalleryScreenComposable(uiState = galleryPreviewState()) },
+            colorsContent = { ColorsScreenComposable() }
         )
     }
 }

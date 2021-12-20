@@ -19,7 +19,8 @@ class ComposeYuActivity : AppCompatActivity() {
             AppYuTheme {
                 MainScreenComposable(
                     clockContent = { ClockScreen(viewModel = viewModel()) },
-                    galleryContent = { GalleryScreen(viewModel = viewModel()) }
+                    galleryContent = { GalleryScreen(viewModel = viewModel()) },
+                    colorsContent = { ColorsScreenComposable() }
                 )
             }
         }
@@ -32,7 +33,8 @@ fun ComposeYuActivityPreview() {
     AppYuTheme {
         MainScreenComposable(
             clockContent = { ClockScreenComposable(state = clockPreviewState()) },
-            galleryContent = { GalleryScreenComposable(uiState = galleryPreviewState()) }
+            galleryContent = { GalleryScreenComposable(uiState = galleryPreviewState()) },
+            colorsContent = { ColorsScreenComposable() }
         )
     }
 }

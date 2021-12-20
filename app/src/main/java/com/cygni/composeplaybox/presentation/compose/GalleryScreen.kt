@@ -1,6 +1,7 @@
 package com.cygni.composeplaybox.presentation.compose
 
 import android.content.Intent
+import android.content.res.Configuration
 import android.net.Uri
 import android.util.Log
 import androidx.compose.animation.Crossfade
@@ -46,6 +47,7 @@ import coil.compose.rememberImagePainter
 import coil.size.OriginalSize
 import com.cygni.composeplaybox.R
 import com.cygni.composeplaybox.data.models.PhotoModel
+import com.cygni.composeplaybox.presentation.colors.AppYuTheme
 import com.cygni.composeplaybox.presentation.viewmodel.GalleryScreenState
 import com.cygni.composeplaybox.presentation.viewmodel.GalleryViewModel
 
@@ -60,7 +62,9 @@ fun GalleryScreenComposable(uiState: GalleryScreenState) {
     var anyImageLoaded by remember { mutableStateOf(false) }
 
     Crossfade(targetState = anyImageLoaded) { isAnyImageLoaded ->
-        LazyColumn(modifier = Modifier.fillMaxSize()) {
+        LazyColumn(modifier = Modifier
+            .fillMaxSize()
+            .background(color = MaterialTheme.colorScheme.background)) {
             items(items = uiState.photos) { photo ->
                 ConstraintLayout(
                     modifier = Modifier
@@ -200,10 +204,23 @@ fun OverlayComposable(photo: PhotoModel, onClick: () -> Unit) {
 @Preview
 @Composable
 fun GalleryPreview() {
-    GalleryScreenComposable(
-        uiState = galleryPreviewState()
-    )
+    AppYuTheme {
+        GalleryScreenComposable(
+            uiState = galleryPreviewState()
+        )
+    }
 }
+
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+fun GalleryDarkPreview() {
+    AppYuTheme {
+        GalleryScreenComposable(
+            uiState = galleryPreviewState()
+        )
+    }
+}
+
 
 fun galleryPreviewState(): GalleryScreenState = GalleryScreenState(
     listOf(

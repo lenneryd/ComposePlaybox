@@ -6,6 +6,7 @@ import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -35,6 +36,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import com.cygni.composeplaybox.presentation.colors.AppYuTheme
 import com.cygni.composeplaybox.presentation.viewmodel.ClockScreenState
 import com.cygni.composeplaybox.presentation.viewmodel.ClockTime
 import com.cygni.composeplaybox.presentation.viewmodel.ClockViewModel
@@ -57,7 +59,9 @@ fun ClockScreenComposable(
     preStartedStopwatch: Date? = null
 ) {
     ConstraintLayout(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
+            .background(color = MaterialTheme.colorScheme.background)
     ) {
         // Create refs for direct children
         val (background, clockBox, stopwatch, stopwatchBackground) = createRefs()
@@ -73,9 +77,10 @@ fun ClockScreenComposable(
         ClockGraphicsComposable(
             state = ClockGraphicsState(
                 second = clockState.numbers.second,
-                color = MaterialTheme.colorScheme.surface,
+                color = MaterialTheme.colorScheme.tertiary,
                 fillCircle = clockState.numbers.minute % 2 == 0,
-                useStroke = useStroke
+                useStroke = useStroke,
+                background = MaterialTheme.colorScheme.tertiaryContainer
             ),
             modifier = Modifier.constrainAs(background) {
                 top.linkTo(clockBox.top)
@@ -96,7 +101,8 @@ fun ClockScreenComposable(
                 clockState.minute,
                 clockState.hour,
                 clockState.weekday,
-                clockState.dayMonth
+                clockState.dayMonth,
+                if (useStroke) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.onTertiary
             ),
             modifier = Modifier
                 .constrainAs(clockBox) {
@@ -120,23 +126,13 @@ fun ClockScreenComposable(
             }
 
             if (timeToShow != null) {
-                StopWatchComposable(
-                    state = timeToShow.toStopWatchState(),
-                    modifier = Modifier
-                        .constrainAs(stopwatch) {
-                            top.linkTo(clockBox.bottom, margin = 16.dp)
-                            bottom.linkTo(parent.bottom)
-                            start.linkTo(parent.start)
-                            end.linkTo(parent.end)
-                        }
-                )
-
                 ClockGraphicsComposable(
                     state = ClockGraphicsState(
                         second = timeToShow.second,
-                        color = MaterialTheme.colorScheme.surface,
+                        color = MaterialTheme.colorScheme.tertiary,
                         fillCircle = timeToShow.minute % 2 == 0,
-                        useStroke = true
+                        useStroke = true,
+                        background = MaterialTheme.colorScheme.tertiaryContainer
                     ),
                     modifier = Modifier.constrainAs(stopwatchBackground) {
                         top.linkTo(stopwatch.top)
@@ -149,6 +145,17 @@ fun ClockScreenComposable(
                     onClick = {
                         stopWatchRunningState = stopWatchRunningState.toggle(Date())
                     }
+                )
+
+                StopWatchComposable(
+                    state = timeToShow.toStopWatchState(MaterialTheme.colorScheme.tertiary),
+                    modifier = Modifier
+                        .constrainAs(stopwatch) {
+                            top.linkTo(clockBox.bottom, margin = 16.dp)
+                            bottom.linkTo(parent.bottom)
+                            start.linkTo(parent.start)
+                            end.linkTo(parent.end)
+                        }
                 )
             }
         }
@@ -190,6 +197,7 @@ fun sweepAngle(second: Int): State<Float> {
 data class ClockGraphicsState(
     val second: Int,
     val color: Color,
+    val background: Color,
     val fillCircle: Boolean = true,
     val useStroke: Boolean = true
 )
@@ -203,9 +211,9 @@ fun ClockGraphicsComposable(
     Box(
         modifier = modifier
             .aspectRatio(1.0f, matchHeightConstraintsFirst = true)
+            .background(color = state.background, CircleShape)
             .clickable { onClick() }
     ) {
-        val color: Color = MaterialTheme.colorScheme.surface
         val sweep = sweepAngle(second = state.second).value * 360f
         val sweepAngle = if (state.fillCircle) sweep else 360f - sweep
         val startAngle = if (state.fillCircle) -90f else -90f + sweep
@@ -220,11 +228,11 @@ fun ClockGraphicsComposable(
                 if (state.second == 0) {
                     // In this special case we've just changed to the next minute on second 0.
                     if (!state.fillCircle && !state.useStroke) {
-                        drawCircle(color = color)
+                        drawCircle(color = state.color)
                     }
                 } else {
                     drawArc(
-                        color = color,
+                        color = state.color,
                         startAngle = startAngle,
                         sweepAngle = sweepAngle,
                         useCenter = !state.useStroke,
@@ -241,7 +249,8 @@ data class ClockTextState(
     val minute: String,
     val hour: String,
     val weekday: String,
-    val dayMonth: String
+    val dayMonth: String,
+    val color: Color
 )
 
 @Composable
@@ -254,13 +263,13 @@ fun ClockTextComposable(state: ClockTextState, modifier: Modifier) {
                 Text(
                     text = "${state.hour}:${state.minute}:",
                     fontSize = 22.sp,
-                    color = MaterialTheme.colorScheme.primary,
+                    color = state.color,
                     modifier = Modifier.alignByBaseline(),
                 )
                 Text(
                     text = state.second,
                     fontSize = 18.sp,
-                    color = MaterialTheme.colorScheme.primary,
+                    color = state.color,
                     modifier = Modifier.alignByBaseline()
                 )
             }
@@ -269,26 +278,27 @@ fun ClockTextComposable(state: ClockTextState, modifier: Modifier) {
                     text = state.weekday,
                     fontSize = 36.sp,
                     fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.primary
+                    color = state.color
                 )
             }
             Row(modifier = Modifier.align(Alignment.CenterHorizontally)) {
                 Text(
                     text = state.dayMonth,
                     fontSize = 24.sp,
-                    color = MaterialTheme.colorScheme.primary
+                    color = state.color
                 )
             }
         }
     }
 }
 
-fun ClockTime.toStopWatchState() = StopWatchState(
+fun ClockTime.toStopWatchState(color: Color) = StopWatchState(
     millisecond = millisecond.takeUnless { it < 0 }?.let { "$millisecond" }.orEmpty()
         .padStart(3, '0'),
     second = second.takeUnless { it < 0 }?.let { "$second" }.orEmpty().padStart(2, '0'),
     minute = "$minute".padStart(2, '0'),
     hour = "$hour".padStart(2, '0'),
+    color
 )
 
 data class StopWatchState(
@@ -296,6 +306,7 @@ data class StopWatchState(
     val second: String,
     val minute: String,
     val hour: String,
+    val color: Color
 )
 
 @Composable
@@ -308,14 +319,14 @@ fun StopWatchComposable(state: StopWatchState, modifier: Modifier) {
                 Text(
                     text = "${state.hour}:${state.minute}:${state.second}",
                     fontSize = 22.sp,
-                    color = MaterialTheme.colorScheme.primary,
+                    color = state.color,
                     modifier = Modifier.alignByBaseline(),
                 )
             }
             Text(
                 text = state.millisecond,
                 fontSize = 18.sp,
-                color = MaterialTheme.colorScheme.primary,
+                color = state.color,
                 modifier = Modifier.align(Alignment.CenterHorizontally)
             )
         }
@@ -325,30 +336,36 @@ fun StopWatchComposable(state: StopWatchState, modifier: Modifier) {
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES)
 @Composable
 fun StopWatchPreview() {
-    ClockScreenComposable(
-        state = stopwatchPreviewState(), preStartedStopwatch =
-        Date.from(
-            Instant.ofEpochMilli(Date().time)
-                .minusSeconds(70)
-                .minusMillis(12)
+    AppYuTheme {
+        ClockScreenComposable(
+            state = stopwatchPreviewState(), preStartedStopwatch =
+            Date.from(
+                Instant.ofEpochMilli(Date().time)
+                    .minusSeconds(70)
+                    .minusMillis(12)
+            )
         )
-    )
+    }
 }
 
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO)
 @Composable
 fun ClockScreenPreview() {
-    ClockScreenComposable(
-        state = clockPreviewState()
-    )
+    AppYuTheme {
+        ClockScreenComposable(
+            state = clockPreviewState()
+        )
+    }
 }
 
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES)
 @Composable
 fun ClockScreenNightPreview() {
-    ClockScreenComposable(
-        state = clockPreviewState()
-    )
+    AppYuTheme {
+        ClockScreenComposable(
+            state = clockPreviewState()
+        )
+    }
 }
 
 fun stopwatchPreviewState(): ClockScreenState = ClockScreenState(Date())

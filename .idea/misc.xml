@@ -31,9 +31,17 @@
         <entry key="../../../../../layout/compose-model-1639149654177.xml" value="0.33055555555555555" />
         <entry key="../../../../../layout/compose-model-1639149717883.xml" value="0.33055555555555555" />
         <entry key="../../../../../layout/compose-model-1639149834692.xml" value="0.10930555555555556" />
+        <entry key="../../../../../layout/compose-model-1639750883144.xml" value="0.1" />
+        <entry key="../../../../../layout/compose-model-1639750908575.xml" value="0.3138888888888889" />
+        <entry key="../../../../../layout/compose-model-1639753266659.xml" value="0.21410472972972974" />
+        <entry key="../../../../../layout/compose-model-1639755929394.xml" value="0.32685185185185184" />
+        <entry key="../../../../../layout/compose-model-1639759048021.xml" value="0.32685185185185184" />
+        <entry key="../../../../../layout/compose-model-1639759079803.xml" value="0.32685185185185184" />
+        <entry key="../../../../../layout/compose-model-1640003445586.xml" value="0.10930555555555556" />
         <entry key="app/src/main/res/drawable/clock_outline.xml" value="0.22083333333333333" />
         <entry key="app/src/main/res/drawable/image.xml" value="0.37435897435897436" />
         <entry key="app/src/main/res/drawable/image_transition.xml" value="0.2546875" />
+        <entry key="app/src/main/res/drawable/information.xml" value="0.32685185185185184" />
         <entry key="app/src/main/res/layout/clock_fragment.xml" value="0.3640625" />
         <entry key="app/src/main/res/layout/navigation_activity.xml" value="0.3640625" />
         <entry key="app/src/main/res/layout/start_navigation_fragment.xml" value="0.3640625" />
